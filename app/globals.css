@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
-@theme inline {
+/* 1. THEME CONFIGURATION (@theme)
+ * This directive maps your CSS variables to Tailwind utility classes.
+ * This replaces the 'theme: { extend: { colors, borderRadius, ... } }' section 
+ * from your old tailwind.config.js.
+ */
+@theme {
+  /* Colors */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -20,48 +26,86 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  --radius: var(--radius);
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  /* Radius */
+  --border-radius-DEFAULT: var(--radius);
+  --border-radius-md: calc(var(--radius) - 2px);
+  --border-radius-sm: calc(var(--radius) - 4px);
+
+  /* Background Images (Gradients) */
+  --background-image-gradient-primary: var(--gradient-primary);
+  --background-image-gradient-success: var(--gradient-success);
+  --background-image-gradient-card: var(--gradient-card);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-glow: var(--shadow-glow);
+
+  /* Transitions */
+  --transition-property-smooth: var(--transition-smooth);
+
+  /* Animations (Mapping to the @keyframes below) */
+  --animation-accordion-down: accordion-down 0.2s ease-out;
+  --animation-accordion-up: accordion-up 0.2s ease-out;
 }
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
+/* Keyframes must be defined using standard CSS outside of @theme for global usage */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
 
+/* 2. CSS VARIABLE DEFINITIONS (:root & .dark)
+ * This defines the actual HSL values for your light and dark themes.
+ */
+
+:root {
+  /* Colors */
+  --background: 220 25% 98%;
+  --foreground: 222 47% 11%;
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
-
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
-
   --primary: 233 64% 52%;
   --primary-foreground: 0 0% 100%;
   --primary-glow: 233 64% 62%;
-
   --secondary: 220 17% 92%;
   --secondary-foreground: 222 47% 11%;
-
   --muted: 220 17% 95%;
   --muted-foreground: 220 9% 46%;
-
   --accent: 270 60% 60%;
   --accent-foreground: 0 0% 100%;
-
   --success: 142 76% 36%;
   --success-foreground: 0 0% 100%;
-
   --warning: 38 92% 50%;
   --warning-foreground: 0 0% 100%;
-
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-
   --border: 220 17% 88%;
   --input: 220 17% 88%;
   --ring: 233 64% 52%;
 
+  /* Radius, Gradients, Shadows, Transitions */
   --radius: 0.75rem;
-
-  /* Gradients */
   --gradient-primary: linear-gradient(
     135deg,
     hsl(233 64% 52%) 0%,
@@ -77,113 +121,41 @@
     hsl(0 0% 100%) 0%,
     hsl(220 25% 99%) 100%
   );
-
-  /* Shadows */
   --shadow-sm: 0 1px 2px 0 hsl(220 17% 88% / 0.5);
   --shadow-md: 0 4px 6px -1px hsl(220 17% 88% / 0.5);
   --shadow-lg: 0 10px 15px -3px hsl(220 17% 88% / 0.3);
   --shadow-glow: 0 0 20px hsl(233 64% 52% / 0.15);
-
-  /* Transitions */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 222 47% 11%;
-    --foreground: 220 25% 98%;
-
-    --card: 220 20% 14%;
-    --card-foreground: 220 25% 98%;
-
-    --popover: 220 20% 14%;
-    --popover-foreground: 220 25% 98%;
-
-    --primary: 233 64% 62%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 233 64% 72%;
-
-    --secondary: 220 17% 20%;
-    --secondary-foreground: 220 25% 98%;
-
-    --muted: 220 17% 18%;
-    --muted-foreground: 220 9% 65%;
-
-    --accent: 270 60% 65%;
-    --accent-foreground: 0 0% 100%;
-
-    --success: 142 76% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 38 92% 60%;
-    --warning-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 65%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 17% 25%;
-    --input: 220 17% 25%;
-    --ring: 233 64% 62%;
-
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(233 64% 62%) 0%,
-      hsl(270 60% 65%) 100%
-    );
-    --gradient-success: linear-gradient(
-      135deg,
-      hsl(142 76% 45%) 0%,
-      hsl(158 64% 60%) 100%
-    );
-    --gradient-card: linear-gradient(
-      180deg,
-      hsl(220 20% 14%) 0%,
-      hsl(220 20% 16%) 100%
-    );
-
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 20px hsl(233 64% 62% / 0.2);
-  }
-}
-
 .dark {
+  /* Colors (Dark Mode) */
   --background: 222 47% 11%;
   --foreground: 220 25% 98%;
-
   --card: 220 20% 14%;
   --card-foreground: 220 25% 98%;
-
   --popover: 220 20% 14%;
   --popover-foreground: 220 25% 98%;
-
   --primary: 233 64% 62%;
   --primary-foreground: 0 0% 100%;
   --primary-glow: 233 64% 72%;
-
   --secondary: 220 17% 20%;
   --secondary-foreground: 220 25% 98%;
-
   --muted: 220 17% 18%;
   --muted-foreground: 220 9% 65%;
-
   --accent: 270 60% 65%;
   --accent-foreground: 0 0% 100%;
-
   --success: 142 76% 45%;
   --success-foreground: 0 0% 100%;
-
   --warning: 38 92% 60%;
   --warning-foreground: 0 0% 100%;
-
   --destructive: 0 84% 65%;
   --destructive-foreground: 0 0% 100%;
-
   --border: 220 17% 25%;
   --input: 220 17% 25%;
   --ring: 233 64% 62%;
 
+  /* Gradients, Shadows (Dark Mode) */
   --gradient-primary: linear-gradient(
     135deg,
     hsl(233 64% 62%) 0%,
@@ -199,13 +171,22 @@
     hsl(220 20% 14%) 0%,
     hsl(220 20% 16%) 100%
   );
-
   --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
   --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
   --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
   --shadow-glow: 0 0 20px hsl(233 64% 62% / 0.2);
 }
 
+/* 3. GLOBAL BASE STYLES
+ * This applies your base styles to the document.
+ */
+
+/* Sets the default border color for all elements using your theme variable */
+* {
+  border-color: hsl(var(--border));
+}
+
+/* Sets the default background and text colors for the document */
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
