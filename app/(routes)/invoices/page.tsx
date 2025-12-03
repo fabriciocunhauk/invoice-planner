@@ -9,6 +9,14 @@ import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Badge } from "@/app/components/ui/badge";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 
 export default function Invoices() {
   const { invoices } = useFinance();
@@ -91,42 +99,99 @@ export default function Invoices() {
       {/* Invoices List */}
       <div className="space-y-4">
         {filteredInvoices.map((invoice) => (
-          <Card
-            key={invoice.id}
-            className="p-6 bg-gradient-card hover:shadow-lg transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2">
-                  <h3 className="font-semibold text-lg text-foreground">
-                    {invoice.id}
-                  </h3>
+          <Dialog key={invoice.id}>
+            <Card className="p-6 bg-gradient-card hover:shadow-lg transition-all duration-200">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="font-semibold text-lg text-foreground">
+                      {invoice.id}
+                    </h3>
+                    <Badge className={statusColors[invoice.status]}>
+                      {invoice.status}
+                    </Badge>
+                  </div>
+                  <p className="text-foreground font-medium mb-1">
+                    {invoice.clientName}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {invoice.description}
+                  </p>
+                  <div className="flex items-center space-x-4 mt-3 text-sm text-muted-foreground">
+                    <span>Issued: {format(invoice.date, "MMM dd, yyyy")}</span>
+                    <span>•</span>
+                    <span>Due: {format(invoice.dueDate, "MMM dd, yyyy")}</span>
+                  </div>
+                </div>
+                <div className="mt-4 md:mt-0 md:ml-6 text-right">
+                  <p className="text-2xl font-bold text-foreground">
+                    {formatCurrency(invoice.amount)}
+                  </p>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 cursor-pointer"
+                    >
+                      View Details
+                    </Button>
+                  </DialogTrigger>
+                </div>
+              </div>
+            </Card>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invoice #{invoice.id}</DialogTitle>
+                <DialogDescription>
+                  View details for invoice from{" "}
+                  <span className="font-medium">{invoice.clientName}</span>
+                  {" — "}amount:{" "}
+                  <span className="font-semibold">
+                    {formatCurrency(invoice.amount)}
+                  </span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Client</p>
+                  <p className="font-medium text-foreground">
+                    {invoice.clientName}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Description</p>
+                  <p className="font-medium text-foreground">
+                    {invoice.description}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Amount</p>
+                  <p className="font-semibold text-foreground text-lg">
+                    {formatCurrency(invoice.amount)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
                   <Badge className={statusColors[invoice.status]}>
                     {invoice.status}
                   </Badge>
                 </div>
-                <p className="text-foreground font-medium mb-1">
-                  {invoice.clientName}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {invoice.description}
-                </p>
-                <div className="flex items-center space-x-4 mt-3 text-sm text-muted-foreground">
-                  <span>Issued: {format(invoice.date, "MMM dd, yyyy")}</span>
-                  <span>•</span>
-                  <span>Due: {format(invoice.dueDate, "MMM dd, yyyy")}</span>
+                <div>
+                  <p className="text-sm text-muted-foreground">Issued</p>
+                  <p className="font-medium text-foreground">
+                    {format(invoice.date, "MMMM dd, yyyy")}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Due</p>
+                  <p className="font-medium text-foreground">
+                    {format(invoice.dueDate, "MMMM dd, yyyy")}
+                  </p>
                 </div>
               </div>
-              <div className="mt-4 md:mt-0 md:ml-6 text-right">
-                <p className="text-2xl font-bold text-foreground">
-                  {formatCurrency(invoice.amount)}
-                </p>
-                <Button variant="outline" size="sm" className="mt-3">
-                  View Details
-                </Button>
-              </div>
-            </div>
-          </Card>
+            </DialogContent>
+          </Dialog>
         ))}
       </div>
     </div>
