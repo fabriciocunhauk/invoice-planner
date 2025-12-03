@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { Providers } from "./providers";
 import Navigation from "@/app/components/Navigation";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "FinanceHub",
