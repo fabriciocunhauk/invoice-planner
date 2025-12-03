@@ -14,6 +14,14 @@ import MetricCard from "@/app/components/MetricCard";
 import { Card } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 
 export default function Dashboard() {
   const { invoices, expenses, taxSettings } = useFinance();
@@ -138,32 +146,73 @@ export default function Dashboard() {
         </h2>
         <div className="space-y-3">
           {recentInvoices.map((invoice) => (
-            <div
-              key={invoice.id}
-              className="flex items-center justify-between p-4 rounded-lg bg-background/50 hover:bg-background transition-colors duration-200"
-            >
-              <div className="flex-1">
-                <div className="flex items-center space-x-3">
-                  <p className="font-medium text-foreground">
-                    {invoice.clientName}
-                  </p>
-                  <Badge className={statusColors[invoice.status]}>
-                    {invoice.status}
-                  </Badge>
+            <Dialog key={invoice.id}>
+              <DialogTrigger asChild>
+                <div className="flex items-center justify-between p-4 rounded-lg bg-background/50 hover:bg-background transition-colors duration-200 cursor-pointer">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3">
+                      <p className="font-medium text-foreground">
+                        {invoice.clientName}
+                      </p>
+                      <Badge className={statusColors[invoice.status]}>
+                        {invoice.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {invoice.description}
+                    </p>
+                  </div>
+                  <div className="text-right ml-4">
+                    <p className="font-semibold text-foreground">
+                      {formatCurrency(invoice.amount)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {format(invoice.date, "MMM dd, yyyy")}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {invoice.description}
-                </p>
-              </div>
-              <div className="text-right ml-4">
-                <p className="font-semibold text-foreground">
-                  {formatCurrency(invoice.amount)}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {format(invoice.date, "MMM dd, yyyy")}
-                </p>
-              </div>
-            </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Invoice Details</DialogTitle>
+                  <DialogDescription>
+                    View details for invoice from {invoice.clientName}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Client</p>
+                    <p className="font-medium text-foreground">
+                      {invoice.clientName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Description</p>
+                    <p className="font-medium text-foreground">
+                      {invoice.description}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Amount</p>
+                    <p className="font-semibold text-foreground text-lg">
+                      {formatCurrency(invoice.amount)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Status</p>
+                    <Badge className={statusColors[invoice.status]}>
+                      {invoice.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Date</p>
+                    <p className="font-medium text-foreground">
+                      {format(invoice.date, "MMMM dd, yyyy")}
+                    </p>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
       </Card>
